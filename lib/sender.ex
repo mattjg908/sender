@@ -23,6 +23,8 @@ defmodule Sender do
   end
 
   def notify_all(emails) do
-    Enum.each(emails, &send_email/1)
+    emails
+    |> Task.async_stream(&send_email/1, ordered: false)
+    |> Enum.to_list()
   end
 end
